@@ -55,11 +55,6 @@ This project aims to contribute to this field by developing a hybrid recommender
 
 8. Open your web browser and navigate to `http://localhost:3000` to view the application.
 
-Remember to replace the placeholder values in the `.env.local` file with your actual MongoDB URI, token secret, and domain. These environment variables are crucial for the proper functioning of the application[1].
-
-Citations:
-[1] https://github.com/kunalduttagit/motion.git
-
 
 ## License
 **Motion** is licensed under a custom license. By using, copying, modifying, or distributing this software, you agree to the following terms:
