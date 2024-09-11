@@ -39,10 +39,21 @@ export default function SearchComponent({open} : Props) {
     useHotkeys('mod+k', () => setIsOpen(!isOpen));
 
     useEffect(() => {
+        const searchMovies = async () => {
+            try {
+                if (searchParam.length > 0) {
+                    const { data } = await axios.get(`/api/movie/search?movie=${searchParam}`);
+                    setSearchResults(data.results);
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        };
+    
         const timer = setTimeout(() => {
             searchMovies();
         }, 500);
-
+    
         return () => clearTimeout(timer);
     }, [searchParam]);
 
@@ -52,16 +63,16 @@ export default function SearchComponent({open} : Props) {
     };
 
 
-    const searchMovies = async () => {
-        try{
-            if(searchParam.length > 0) {
-                const { data } = await axios.get(`/api/movie/search?movie=${searchParam}`);
-                setSearchResults(data.results);
-            }
-        } catch (error){
-            console.log(error);
-        }       
-    }
+    // const searchMovies = async () => {
+    //     try{
+    //         if(searchParam.length > 0) {
+    //             const { data } = await axios.get(`/api/movie/search?movie=${searchParam}`);
+    //             setSearchResults(data.results);
+    //         }
+    //     } catch (error){
+    //         console.log(error);
+    //     }       
+    // }
 
     const removeSpinner = (id: string) => {
         const timer = setTimeout(() => {

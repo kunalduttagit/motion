@@ -117,7 +117,7 @@ export default function Signup() {
 
                     </div>
                         <div className='text-gray-600 w-full flex justify-center'>
-                            Don't have an account?
+                            Don&apos;t have an account?
                             <Link href='/signup' className='text-black font-semibold ml-1'>
                                 Sign up
                             </Link>
