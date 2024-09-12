@@ -85,6 +85,7 @@ export default function CarouselPlugin() {
     const fetchOnLoad = async () => {
         try {
             const { data } = await axios.get('/api/movie/card');
+            console.log(data);
             setMovies(prevMovies => ({
                 ...prevMovies,
                 popular: data.popular,
@@ -103,7 +104,6 @@ export default function CarouselPlugin() {
                 family: data.genreMovies["Family"],
                 documentary: data.genreMovies["Documentary"],
             }));
-            console.log(data.genreMovies)
         } catch (error: any) {
             console.log("Server error: " + error)
         }

@@ -2,7 +2,7 @@ import { connect } from '@/db/dbConfig';
 import User from '@/db/models/userModel';
 import { NextRequest, NextResponse } from 'next/server';
 import bcryptjs from 'bcryptjs';
-import jwt from 'jsonwebtoken'
+import { SignJWT } from 'jose'
 
 connect();
 
@@ -23,14 +23,17 @@ export async function POST(request: NextRequest) {
         if (!passwordValid) {
             return NextResponse.json({ error: 'Unauthorized - Invalid password' }, { status: 401 });
         }
-
+        
         const tokenData = {
             id: user._id,
             username: user.username,
             email: user.email
         }
 
-        const token = await jwt.sign(tokenData, process.env.TOKEN_SECRET!, { expiresIn: "10d" })
+        const token = await new SignJWT(tokenData)
+            .setProtectedHeader({ alg: 'HS256' })
+            .setExpirationTime('10d')
+            .sign(new TextEncoder().encode(process.env.TOKEN_SECRET!));
         //delete cookie from user browser after JWT token has expired
         const expires = new Date(Date.now() + 10 * 24 * 60 * 60 * 1000);
         
@@ -41,7 +44,7 @@ export async function POST(request: NextRequest) {
             username: user.username,
             email
         })
-        response.cookies.set("token", token, { httpOnly: true, expires });
+        response.cookies.set("motion-user-token", token, { httpOnly: true, expires });
 
         return response;
     } catch (error: any) {

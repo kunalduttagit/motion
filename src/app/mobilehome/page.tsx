@@ -103,7 +103,6 @@ export default function CarouselPlugin() {
                 family: data.genreMovies["Family"],
                 documentary: data.genreMovies["Documentary"],
             }));
-            console.log(data.genreMovies)
         } catch (error: any) {
             console.log("Server error: " + error)
         }

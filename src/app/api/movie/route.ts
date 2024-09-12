@@ -7,7 +7,6 @@ connect();
 export async function GET(request: NextRequest) {
     try {
         const id = request.nextUrl.searchParams.get("id");
-        console.log(id)
         const movie = await Movie.findById(id);
         if(!movie){
             return NextResponse.json({message: "No Movie found"}, {status: 404});

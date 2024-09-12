@@ -87,7 +87,6 @@ export default function Profile({ params }: any) {
      		if(changeEmail.length == 0) setChangeEmail(user.email);
      		if(changeUsername.length == 0) setChangeUsername(user.username);
        		if(!changeEmail.length && !changeUsername.length) return;
-        	console.log(changeEmail, changeUsername)
      		const { data } = await axios.put('/api/user', {newUsername: changeUsername, newEmail: changeEmail});
 	            toast({
 	            	title: "Success!",

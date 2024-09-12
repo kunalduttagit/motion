@@ -3,21 +3,15 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { useLottie } from "lottie-react";
 import animationData from '../../../../public/lottie/a2.json';
 import { isMobile } from '@/utils/isMobile';
+import dynamic from "next/dynamic";
 
-export default function Signup() {
-    const options = {
-        loop: true,
-        autoplay: true,
-        animationData: animationData,
-        rendererSettings: {
-          preserveAspectRatio: 'xMidYMid slice'
-        }
-    };
-    const { View } = useLottie(options);
+const LottieAnimation = dynamic(() => import("@/components/ui/loginDynamicLottie"), {
+    ssr: false
+});
 
+export default function Login() {
     const [user, setUser] = useState({
         email: '',
         password: '',
@@ -51,7 +45,7 @@ export default function Signup() {
             };
 
             const { data } = await axios.post('/api/auth/login', user, config);
-           isMobile() ? router.push('/mobilehome') : router.push('/home/');
+           router.push('/home/');
         } catch (error: any) {
             if (error.response && error.response.status === 404) {
                 // User already exists
@@ -126,7 +120,9 @@ export default function Signup() {
             </div>
 
             <div className='w-[60%] h-screen flex justify-center items-center rounded-md max-md:hidden'>
-                <div className='w-[70vh] rounded-3xl overflow-hidden'>{View}</div>
+                <div className='w-[70vh] rounded-3xl overflow-hidden'>
+                    <LottieAnimation />
+                </div>
             </div>
             
         </div>

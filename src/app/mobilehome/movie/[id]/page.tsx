@@ -1,41 +1,30 @@
 import Movie from "@/db/models/movieModel";
 import { connect } from "@/db/dbConfig";
-import Link from "next/link";
 import { Card3 } from "@/components/ui/card";
 import Image from "next/image";
 import { languageMap } from "@/utils/languageMap";
-import { getTokenData } from "@/utils/getTokenData";
-import axios from "axios";
 import { cookies } from "next/headers";
-import jwt, { JwtPayload } from "jsonwebtoken";
 import User from "@/db/models/userModel";
-import { ClipboardEventHandler } from "react";
+import { verifyAuth } from "@/lib/auth";
 
 connect();
 
-const getUserId = () => {
+const getUserId = async () =>  {
   try {
     // Access the cookies using the cookies function
     const cookieStore = cookies();
-    const encodedToken = cookieStore.get("token")?.value || "";
+    const encodedToken = cookieStore.get("motion-user-token")?.value || "";
 
     // Verify and decode the JWT
-    const decodedToken = jwt.verify(
-      encodedToken,
-      process.env.TOKEN_SECRET!,
-    ) as JwtPayload;
-
-    // Return the decoded token data
-    return {
-      id: decodedToken.id,
-    };
+    const { jti } = await verifyAuth(encodedToken);
+    return  jti;
   } catch (error: any) {
     throw new Error(error.message);
   }
 };
 
 export default async function MovieDetails({ params }: any) {
-  const { id } = getUserId();
+  const id = getUserId();
   let watchList = [] as any;
   try {
     const user = await User.findById(id);

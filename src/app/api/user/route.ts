@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getTokenData } from "@/utils/getTokenData";
 import User from "@/db/models/userModel";
 import { connect } from "@/db/dbConfig";
 
@@ -7,7 +6,7 @@ connect();
 
 export async function GET(request: NextRequest) {
     try {
-        const { username, id, email } = await getTokenData(request);
+        const id = request.headers.get('x-user-id');
         const user = await User.findById(id).select('-password ');
         return NextResponse.json(user, {status: 200});
     } catch (error: any) {
@@ -17,7 +16,7 @@ export async function GET(request: NextRequest) {
 
 export async function PUT(request: NextRequest) {
     try {
-        const {id} = getTokenData(request);
+        const id = request.headers.get('x-user-id');
         const {newUsername, newEmail } = await request.json();
         const emailAlreadyExists = await User.findOne({ email:newEmail })!;
         const usernameAlreadyExists = await User.findOne({ username:newUsername })!;

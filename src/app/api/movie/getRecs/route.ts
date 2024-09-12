@@ -2,12 +2,12 @@ import {connect} from '@/db/dbConfig';
 import User from '@/db/models/userModel';
 import Movie from '@/db/models/movieModel';
 import { NextRequest, NextResponse } from 'next/server';
-import { getTokenData } from '@/utils/getTokenData';
 
 connect();
 
 export async function GET(request: NextRequest) {
-    const { id, username } = getTokenData(request);
+    const id = request.headers.get('x-user-id');
+    const username = request.headers.get('x-user-name');
     try {
         const user = await User.findById(id).populate('watchList');
         user.watchList.sort((a: { timestamp: number; }, b: { timestamp: number; }) => b.timestamp - a.timestamp);

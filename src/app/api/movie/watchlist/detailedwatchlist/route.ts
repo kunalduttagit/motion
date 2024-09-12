@@ -2,12 +2,14 @@ import {connect} from '@/db/dbConfig';
 import Movie from '@/db/models/movieModel';
 import User from '@/db/models/userModel';
 import { NextRequest, NextResponse } from 'next/server';
-import { getTokenData } from '@/utils/getTokenData';
 
 connect();
 
 export async function GET(request: NextRequest) {
-    const { id } = getTokenData(request);
+    const id = request.headers.get('x-user-id');
+    if (!id) {
+        return NextResponse.json({ error: 'User not authenticated' }, { status: 401 });
+    }
     try {
         const user = await User.findById(id).populate({path: 'watchList', model: Movie});
         const movies = [];

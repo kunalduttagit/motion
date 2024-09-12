@@ -1,13 +1,12 @@
 import { connect } from "@/db/dbConfig";
 import User from "@/db/models/userModel";
 import { NextRequest, NextResponse } from "next/server";
-import { getTokenData } from "@/utils/getTokenData";
 
 connect();
 
 export async function GET(request: NextRequest) {
     //const token = request.cookies.get('token')?.value || '';
-    const { id } = getTokenData(request);
+    const id = request.headers.get('x-user-id');
     try {
         const user = await User.findById(id);
         const watchList = await user.watchList || [];
@@ -21,7 +20,7 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) : Promise<NextResponse<{message: string;}>>  {
     const { movie_id } = await request.json();
-    const { id } = getTokenData(request);
+    const id = request.headers.get('x-user-id');
     
     try {
         await User.findByIdAndUpdate(id,
@@ -37,7 +36,7 @@ export async function POST(request: NextRequest) : Promise<NextResponse<{message
 
 export async function DELETE(request: NextRequest) : Promise<NextResponse<{message: string;}>> {
     const movie_id = request.nextUrl.searchParams.get('id');
-    const { id } = getTokenData(request);
+    const id = request.headers.get('x-user-id');
 
     try {
         await User.findByIdAndUpdate(id, {$pull: {watchList: movie_id}})

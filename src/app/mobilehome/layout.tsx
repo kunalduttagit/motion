@@ -3,7 +3,7 @@ import SearchComponent from "@/components/ui/search";
 import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { Toaster } from "@/components/ui/toaster";
 
 export default function Navbar({children,}: { children: React.ReactNode}) {
@@ -80,7 +80,9 @@ export default function Navbar({children,}: { children: React.ReactNode}) {
 
     return (
       <section className="transition ease-linear duration-1000">
-       <SearchComponent open={showSearch}/>
+        <Suspense fallback={<div>Loading search...</div>}>
+            <SearchComponent open={showSearch} />
+        </Suspense>
         {/* Include shared UI here e.g. a header or sidebar */}
         <nav className={` fixed top-0 left-0 right-0  h-20 flex lg:px-20 px-5 items-center justify-between z-[2000] bg-${navbarColor}`}>
             <div>

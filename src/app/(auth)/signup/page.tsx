@@ -3,23 +3,16 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { useLottie } from "lottie-react";
-import animationData from '../../../../public/lottie/a2.json';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { DialogHeader } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import dynamic from "next/dynamic";
+
+const LottieAnimation = dynamic(() => import("@/components/ui/loginDynamicLottie"), {
+    ssr: false
+});
 
 export default function Signup() {
-    const options = {
-        loop: true,
-        autoplay: true,
-        animationData: animationData,
-        rendererSettings: {
-          preserveAspectRatio: 'xMidYMid slice'
-        }
-    };
-    const { View } = useLottie(options);
-
     const [user, setUser] = useState({
         username: '',
         email: '',
@@ -241,7 +234,9 @@ export default function Signup() {
         </div>
 
         <div className='w-[60%] h-screen flex justify-center items-center rounded-md max-md:hidden'>
-                <div className='w-[70vh] rounded-3xl overflow-hidden'>{View}</div>
+                <div className='w-[70vh] rounded-3xl overflow-hidden'>
+                    <LottieAnimation />
+                </div>
         </div>
         
     </div>

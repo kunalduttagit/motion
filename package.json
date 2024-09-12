@@ -24,6 +24,7 @@
     "embla-carousel-autoplay": "^8.0.0-rc22",
     "embla-carousel-react": "^8.0.0-rc22",
     "framer-motion": "^11.2.6",
+    "jose": "^5.8.0",
     "jsonwebtoken": "^9.0.2",
     "lottie-react": "^2.4.0",
     "mongoose": "^8.1.2",
