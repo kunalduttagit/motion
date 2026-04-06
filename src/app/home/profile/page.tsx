@@ -83,41 +83,45 @@ export default function Profile({ params }: any) {
     }
     
     const changeUserInfo = async () => {
-    	try {
-     		if(changeEmail.length == 0) setChangeEmail(user.email);
-     		if(changeUsername.length == 0) setChangeUsername(user.username);
-       		if(!changeEmail.length && !changeUsername.length) return;
-     		const { data } = await axios.put('/api/user', {newUsername: changeUsername, newEmail: changeEmail});
-	            toast({
-	            	title: "Success!",
-	             	description: "Changes saved successfully.",
-	              	duration: 8000
-	            })
-				user.username = data.username;
-				user.email = data.email;
-	     } catch (error: any) {
-			if (error.response.data.message == 'emailExists') {
+        try {
+            // Only include fields that actually changed
+            const payload: { newUsername?: string; newEmail?: string } = {};
+            if (changeUsername !== user.username) payload.newUsername = changeUsername;
+            if (changeEmail !== user.email) payload.newEmail = changeEmail;
+
+            // Nothing changed — skip the request
+            if (Object.keys(payload).length === 0) return;
+
+            const { data } = await axios.put('/api/user', payload);
+            toast({
+                title: "Success!",
+                description: "Changes saved successfully.",
+                duration: 8000
+            });
+            user.username = data.username;
+            user.email = data.email;
+        } catch (error: any) {
+            if (error.response.data.message === 'emailExists') {
                 toast({
-                	title: "Failed!",
-                 	description: "An account with this email already exists. Please log in or use a different email address.",
-                  	duration: 10000
-                })
+                    title: "Failed!",
+                    description: "An account with this email already exists. Please log in or use a different email address.",
+                    duration: 10000
+                });
             } else if (error.response.data.message === 'usernameExists') {
-	            toast({
-	            	title: "Failed!",
-	             	description: "This username is already taken. Please try again with a different username",
-	              	duration: 10000
-	            }) 
+                toast({
+                    title: "Failed!",
+                    description: "This username is already taken. Please try again with a different username.",
+                    duration: 10000
+                });
+            } else {
+                toast({
+                    title: "Error!",
+                    description: error.response.data.error,
+                    duration: 8000
+                });
             }
-            else {
-				toast({
-	            	title: "Error!",
-	             	description: error.response.data.error,
-	              	duration: 8000
-	            })
-            }
-	     	console.log(error)
-	     }
+            console.log(error);
+        }
     }
     
     const logoutHandler = async () => {
@@ -171,13 +175,13 @@ export default function Profile({ params }: any) {
                                     <Label htmlFor="username" className="text-right">
                                       Username
                                     </Label>
-                                    <Input id="username" value={changeUsername} defaultValue={user.username} className="col-span-3" placeholder={`@${user.username}`} onChangeCapture={e => setChangeUsername(e.currentTarget.value)}/>
+                                    <Input id="username" value={changeUsername} className="col-span-3" placeholder={`@${user.username}`} onChange={e => setChangeUsername(e.target.value)}/>
                                   </div>
                                   <div className="grid grid-cols-4 items-center gap-4">
                                     <Label htmlFor="email" className="text-right">
                                       Email
                                     </Label>
-                                    <Input id="email" value={changeEmail} defaultValue={user.email} placeholder={`${user.email}`} className="col-span-3" onChangeCapture={e => setChangeEmail(e.currentTarget.value)}/>
+                                    <Input id="email" value={changeEmail} placeholder={`${user.email}`} className="col-span-3" onChange={e => setChangeEmail(e.target.value)}/>
                                   </div>
                                 </div>
                                 <DialogFooter>

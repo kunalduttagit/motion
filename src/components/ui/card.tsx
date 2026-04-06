@@ -155,7 +155,7 @@ export function Card4({ id, imageUrl, title, genres="", year, watchListProp }: {
     )
 }
 
-export function DesktopWatchlistCard({ id, imageUrl, backdropUrl, title, genres, date, language, runtime }: { id: string, imageUrl: string, backdropUrl: string, title: string, genres: [string], date: string, language: string, runtime: number}) {
+export function DesktopWatchlistCard({ id, imageUrl, backdropUrl, title, genres, date, language, runtime, watchListProp=true }: { id: string, imageUrl: string, backdropUrl: string, title: string, genres: [string], date: string, language: string, runtime: number, watchListProp?: boolean}) {
     const hours = Math.floor(runtime/60);
     const minutes = runtime % 60;
     return (
@@ -200,9 +200,9 @@ export function DesktopWatchlistCard({ id, imageUrl, backdropUrl, title, genres,
                             : null
                         }
 
-                        <button className=' my-2 border-[0.5px] hover:backdrop-filter hover:backdrop-blur-md hover:bg-opacity-10 hover:bg-slate-600 border-gray-400 px-10 py-2 w-[90%] lg:w-auto rounded-sm bg-white text-black font-semibold hover:text-gray-400'>
-                            Remove
-                        </button>
+                        <div className='my-2' onClick={(e) => e.preventDefault()}>
+                            <WatchlistButton id={id} watchList={watchListProp} banner={true} />
+                        </div>
                     </div>
                 </div>
             </Link>

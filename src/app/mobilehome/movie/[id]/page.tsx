@@ -11,8 +11,8 @@ connect();
 
 const getUserId = async () =>  {
   try {
-    // Access the cookies using the cookies function
-    const cookieStore = cookies();
+    // Access the cookies using the cookies function (Next.js 16: cookies() is now async)
+    const cookieStore = await cookies();
     const encodedToken = cookieStore.get("motion-user-token")?.value || "";
 
     // Verify and decode the JWT
@@ -31,7 +31,8 @@ export default async function MovieDetails({ params }: any) {
     watchList = (await user.watchList) || [];
   } catch (error: any) {
     if (error.name === "TokenExpiredError") {
-      cookies().delete("token");
+      const cookieStore = await cookies();
+      cookieStore.delete("token");
     }
 
     console.log(error);

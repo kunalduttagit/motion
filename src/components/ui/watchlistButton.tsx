@@ -9,6 +9,11 @@ export function WatchlistButton({ id, watchList, banner=false }: { id: string, w
     const [inList, setInList] = useState(watchList);
     const { toast } = useToast();
 
+    // Sync when parent re-renders with the real watchlist data (async fetch)
+    useEffect(() => {
+        setInList(watchList);
+    }, [watchList]);
+
     const watchlistHandler = async (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
         try {

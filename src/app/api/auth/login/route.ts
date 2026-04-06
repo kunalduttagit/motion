@@ -44,7 +44,14 @@ export async function POST(request: NextRequest) {
             username: user.username,
             email
         })
-        response.cookies.set("motion-user-token", token, { httpOnly: true, expires });
+        const isProduction = process.env.NODE_ENV === 'production';
+        response.cookies.set("motion-user-token", token, { 
+            httpOnly: true, 
+            expires,
+            secure: isProduction,
+            sameSite: 'lax',
+            path: '/'
+        });
 
         return response;
     } catch (error: any) {
