@@ -22,6 +22,7 @@ export default function SearchComponent({open} : Props) {
     const inputRef = useRef() as LegacyRef<HTMLInputElement>;
     const [isOpen, setIsOpen] = useState(false);
     const [loading, setLoading] = useState({} as { [key: string]: boolean });
+    const [proSearch, setProSearch] = useState(false);
 
     useEffect(() => {
         setIsOpen(true);
@@ -42,7 +43,7 @@ export default function SearchComponent({open} : Props) {
         const searchMovies = async () => {
             try {
                 if (searchParam.length > 0) {
-                    const { data } = await axios.get(`/api/movie/search?movie=${searchParam}`);
+                    const { data } = await axios.get(`/api/movie/search?movie=${searchParam}&pro=${proSearch}`);
                     setSearchResults(data.results);
                 }
             } catch (error) {
@@ -55,7 +56,7 @@ export default function SearchComponent({open} : Props) {
         }, 500);
     
         return () => clearTimeout(timer);
-    }, [searchParam]);
+    }, [searchParam, proSearch]);
 
     const handleLoading = (id : string) => {
         // Set loading true for the specific item
@@ -91,7 +92,7 @@ export default function SearchComponent({open} : Props) {
                         <Image src={'/icons/search.png'} alt='Search' width={26} height={20} className="invert-[80%] mx-2"/>
                         <input
                                 type="text"
-                                placeholder="Search..."
+                                placeholder={proSearch ? "Search by title, genre, actor, or director..." : "Search movie titles..."}
                                 value={searchParam}
                                 ref = {inputRef}
                                 onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchParam(e.currentTarget.value)}
@@ -101,7 +102,7 @@ export default function SearchComponent({open} : Props) {
                             />
                             <div className="flex items-center w-20">
                                 <Label htmlFor="adv_search" className="mr-2">Pro</Label>
-                                <Switch id="adv_search" />
+                                <Switch id="adv_search" checked={proSearch} onCheckedChange={setProSearch} />
                             </div>
                             <button className="w-12 mx-2" onClick={() => setIsOpen(false)}>
                                 <Image src="/icons/close.png" width={26} height={20} alt='close' className="invert-[80%]"/>
